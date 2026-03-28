@@ -500,6 +500,7 @@ buffer_to_contiguous(char *mem, const Py_buffer *src, char order)
     int ret;
 
     assert(src->ndim >= 1);
+    assert(src->ndim <= PyBUF_MAX_NDIM);
     assert(src->shape != NULL);
     assert(src->strides != NULL);
 
@@ -1056,6 +1057,13 @@ PyBuffer_ToContiguous(void *buf, const Py_buffer *src, Py_ssize_t len, char orde
     if (len != src->len) {
         PyErr_SetString(PyExc_ValueError,
             "PyBuffer_ToContiguous: len != view->len");
+        return -1;
+    }
+
+    if (src->ndim < 0 || src->ndim > PyBUF_MAX_NDIM) {
+        PyErr_Format(PyExc_ValueError,
+            "PyBuffer_ToContiguous: ndim %d out of range [0, %d]",
+            src->ndim, PyBUF_MAX_NDIM);
         return -1;
     }
 

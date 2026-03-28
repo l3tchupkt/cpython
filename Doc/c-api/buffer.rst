@@ -516,6 +516,9 @@ Buffer-related functions
 
    This function fails if *len* != *src->len*.
 
+   This function also fails if *src->ndim* is negative or greater than
+   :c:macro:`PyBUF_MAX_NDIM`.
+
 
 .. c:function:: int PyObject_CopyData(PyObject *dest, PyObject *src)
 
